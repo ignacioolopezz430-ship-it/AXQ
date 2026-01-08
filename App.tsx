@@ -20,7 +20,7 @@ type AppState = 'LANDING' | 'AUTH' | 'DASHBOARD' | 'NEWS' | 'PENDING' | 'ADMIN';
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>('LANDING');
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
-  const [assetList, setAssetList] = useState<Asset[]>(ASSETS);
+  const [assetList] = useState<Asset[]>(ASSETS);
   const [selectedAsset, setSelectedAsset] = useState<Asset>(ASSETS[0]);
   const [analysis, setAnalysis] = useState<MarketAnalysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -31,11 +31,11 @@ const App: React.FC = () => {
   const MASTER_LICENSE_KEY = 'axq_master_license';
 
   const checkStatus = useCallback(() => {
-    const savedSession = localStorage.getItem(SESSION_KEY);
-    const db = JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+    try {
+      const savedSession = localStorage.getItem(SESSION_KEY);
+      const db = JSON.parse(localStorage.getItem(DB_KEY) || '[]');
 
-    if (savedSession) {
-      try {
+      if (savedSession) {
         const sessionUser = JSON.parse(savedSession) as UserProfile;
         const freshUser = db.find((u: any) => u.email === sessionUser.email);
         
@@ -51,16 +51,12 @@ const App: React.FC = () => {
         } else {
           handleLogout();
         }
-      } catch (e) {
-        handleLogout();
       }
-    } else {
-      const params = new URLSearchParams(window.location.search);
-      if (!params.get('mode') && (appState === 'DASHBOARD' || appState === 'ADMIN' || appState === 'PENDING' || appState === 'NEWS')) {
-        setAppState('LANDING');
-      }
+    } catch (e) {
+      console.error("Error checking session status:", e);
+      handleLogout();
     }
-  }, [appState]);
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -78,7 +74,7 @@ const App: React.FC = () => {
     }
     
     checkStatus();
-  }, []);
+  }, [checkStatus]);
 
   const handleLogout = () => {
     localStorage.removeItem(SESSION_KEY);
@@ -176,15 +172,15 @@ const App: React.FC = () => {
 
   if (appState === 'LANDING') {
     return (
-      <div className="min-h-screen bg-[#0a0a0b] flex flex-col items-center justify-center p-6 relative overflow-hidden">
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-blue-600/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-indigo-600/10 blur-[120px] rounded-full" />
-        <div className="max-w-4xl w-full text-center space-y-8 relative z-10">
+      <div className="min-h-screen bg-[#0a0a0b] flex flex-col items-center justify-center p-6 relative overflow-hidden animate-fade">
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-blue-600/10 blur-[120px] rounded-full z-0" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-indigo-600/10 blur-[120px] rounded-full z-0" />
+        <div className="max-w-4xl w-full text-center space-y-8 relative z-10 animate-slide-up">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 bg-blue-500/10 px-4 py-2 rounded-full border border-blue-500/20 text-blue-400 text-sm font-bold tracking-wider uppercase">
               <Globe size={16} /> AXQ Global Trading
             </div>
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500 select-none">
+            <h1 className="text-7xl md:text-9xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500 select-none">
               AXQ
             </h1>
             <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto leading-relaxed font-medium">Análisis de trading en tiempo real potenciado por IA.</p>
@@ -202,7 +198,7 @@ const App: React.FC = () => {
 
   if (appState === 'AUTH') {
     return (
-      <div className="min-h-screen bg-[#0a0a0b] flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="min-h-screen bg-[#0a0a0b] flex items-center justify-center p-6 relative overflow-hidden animate-fade">
         {isMasterMode && (
           <>
             <div className="absolute inset-0 bg-blue-600/5 animate-pulse" />
@@ -211,7 +207,7 @@ const App: React.FC = () => {
             </div>
           </>
         )}
-        <div className={`w-full max-w-md bg-[#111112] border ${isMasterMode ? 'border-blue-500/30' : 'border-white/10'} rounded-3xl p-10 shadow-2xl animate-in zoom-in duration-300 relative z-10`}>
+        <div className={`w-full max-w-md bg-[#111112] border ${isMasterMode ? 'border-blue-500/30' : 'border-white/10'} rounded-3xl p-10 shadow-2xl animate-zoom relative z-10`}>
           <div className="text-center mb-8">
             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 ${isMasterMode ? 'bg-blue-500/10 text-blue-400' : 'bg-white/5 text-gray-500'}`}>
               {isMasterMode ? <ShieldCheck size={12}/> : <User size={12}/>}
@@ -267,7 +263,7 @@ const App: React.FC = () => {
   if (!currentUser) return null;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0b] text-gray-200">
+    <div className="min-h-screen bg-[#0a0a0b] text-gray-200 animate-fade">
       <nav className="sticky top-0 z-50 bg-[#0a0a0b]/80 backdrop-blur-md border-b border-white/5 px-6 py-4">
         <div className="max-w-[1600px] mx-auto flex flex-col xl:flex-row justify-between items-center gap-6">
           <div className="flex flex-col md:flex-row items-center gap-8">
@@ -295,16 +291,15 @@ const App: React.FC = () => {
               <button onClick={() => setAppState('NEWS')} className={`flex items-center gap-2 px-6 py-2 rounded-xl text-sm font-black transition-all ${appState === 'NEWS' ? 'bg-blue-600 text-white shadow-xl' : 'text-gray-500 hover:text-gray-300'}`}><Newspaper size={18} /> NOTICIAS</button>
             </div>
             
-            {/* NUEVO DROPDOWN DE PERFIL */}
             <UserDropdown user={currentUser} onLogout={handleLogout} />
           </div>
         </div>
       </nav>
       <main className="max-w-[1600px] mx-auto p-4 lg:p-8">
         {appState === 'DASHBOARD' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-in fade-in duration-500">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade">
             <div className="lg:col-span-8 space-y-8">
-              <div className="bg-[#111112] rounded-3xl border border-white/10 shadow-xl overflow-hidden">
+              <div className="bg-[#111112] rounded-3xl border border-white/10 shadow-xl overflow-hidden animate-slide-up">
                 <div className="p-6 border-b border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-6">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-3xl border border-white/10">{selectedAsset.icon}</div>
@@ -316,7 +311,7 @@ const App: React.FC = () => {
               </div>
               <TradingAssistant assetSymbol={selectedAsset.symbol} />
             </div>
-            <div className="lg:col-span-4 space-y-6">
+            <div className="lg:col-span-4 space-y-6 animate-slide-up" style={{ animationDelay: '0.2s' }}>
               <AnalysisDashboard analysis={analysis} loading={isAnalyzing} assetName={selectedAsset.name} assetSymbol={selectedAsset.symbol} currentPrice="Market" onRefresh={() => performAnalysis(selectedAsset)} />
               <div className="bg-white/5 rounded-2xl p-6 border border-white/10 space-y-6 relative overflow-hidden shadow-xl"><h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2"><LayoutGrid size={16} /> Activos Premium</h4><div className="grid grid-cols-2 gap-2">{assetList.map(asset => (<button key={asset.id} onClick={() => setSelectedAsset(asset)} className={`p-3 rounded-xl text-xs font-bold transition-all border ${selectedAsset.id === asset.id ? 'bg-blue-600/20 border-blue-500/40 text-blue-400' : 'bg-white/5 border-transparent text-gray-500 hover:bg-white/10'}`}>{asset.name}</button>))}</div></div>
             </div>
