@@ -1,0 +1,7 @@
+{
+  "name": "AXQ ",
+  "description": "Global real-time trading analysis platform featuring live TradingView charts, automated technical probability indicators, and market session tracking for Forex, Crypto, and Gold.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
