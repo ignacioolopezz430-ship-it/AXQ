@@ -22,8 +22,8 @@ const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose, assetName, ass
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-[#111112] w-full max-w-md rounded-2xl border border-white/10 shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade">
+      <div className="bg-[#111112] w-full max-w-md rounded-2xl border border-white/10 shadow-2xl overflow-hidden animate-zoom">
         <div className="p-6 border-b border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-500/10 rounded-lg">
@@ -79,7 +79,7 @@ const TradeModal: React.FC<TradeModalProps> = ({ isOpen, onClose, assetName, ass
               </div>
             </div>
           ) : (
-            <div className="space-y-6 py-4 animate-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-6 py-4 animate-slide-up">
               <div className="flex justify-center">
                 <div className="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center">
                   <CheckCircle2 size={48} className="text-blue-400" />

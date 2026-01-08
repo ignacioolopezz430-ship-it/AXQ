@@ -26,19 +26,16 @@ const MarketNews: React.FC<MarketNewsProps> = ({ onTriggerAdmin }) => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // COMANDO MAESTRO: Si escribe /admin en el buscador de noticias
     if (search.trim() === '/admin' && onTriggerAdmin) {
       onTriggerAdmin();
       setSearch('');
       return;
     }
-    
     fetchNews(search);
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-fade">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-[#111112] p-8 rounded-3xl border border-white/10 shadow-2xl">
         <div className="space-y-1">
           <h2 className="text-3xl font-black text-white flex items-center gap-3">
@@ -69,7 +66,7 @@ const MarketNews: React.FC<MarketNewsProps> = ({ onTriggerAdmin }) => {
       ) : news.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {news.map((article, idx) => (
-            <div key={idx} className="group bg-[#111112] border border-white/10 rounded-3xl overflow-hidden hover:border-blue-500/30 transition-all hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.2)] flex flex-col">
+            <div key={idx} className="group bg-[#111112] border border-white/10 rounded-3xl overflow-hidden hover:border-blue-500/30 transition-all hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.2)] flex flex-col animate-slide-up">
               <div className="p-6 space-y-4 flex-1">
                 <div className="flex items-center justify-between">
                   <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${

@@ -10,8 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script>
-    // Polyfill crítico para evitar que la app crashee en Vercel si process no está definido
+    // Polyfill ultra-robusto para evitar errores de referencia en producción
     window.process = window.process || { env: { API_KEY: "" } };
+    if (!window.process.env) window.process.env = { API_KEY: "" };
   </script>
   <style>
     body {
@@ -24,23 +25,23 @@
     .mono {
       font-family: 'JetBrains Mono', monospace;
     }
-    /* Animaciones robustas */
+    /* Animaciones Nativas (Reemplazan a tailwindcss-animate) */
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* Aseguramos que la animación sea visible */
-    .animate-fade { 
-      animation: fadeIn 0.4s ease-out forwards; 
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
     }
-    .animate-slide-up { 
-      animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-    }
-    
+    .animate-fade { animation: fadeIn 0.5s ease-out forwards; }
+    .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-zoom { animation: zoomIn 0.4s ease-out forwards; }
+
     #root {
       min-height: 100vh;
       display: flex;

@@ -38,7 +38,7 @@ const TradingAssistant: React.FC<TradingAssistantProps> = ({ assetSymbol }) => {
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
       const response = await ai.models.generateContent({
         model: 'gemini-3-pro-preview',
         contents: [...messages.map(m => ({
@@ -69,7 +69,7 @@ const TradingAssistant: React.FC<TradingAssistantProps> = ({ assetSymbol }) => {
   };
 
   return (
-    <div className="bg-[#111112] border border-white/10 rounded-2xl flex flex-col h-[500px] shadow-2xl overflow-hidden">
+    <div className="bg-[#111112] border border-white/10 rounded-2xl flex flex-col h-[500px] shadow-2xl overflow-hidden animate-fade">
       <div className="p-4 bg-white/[0.03] border-b border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400">
