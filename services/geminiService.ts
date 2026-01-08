@@ -4,7 +4,8 @@ import { MarketAnalysis, NewsArticle } from "../types";
 
 export async function getMarketAnalysis(symbol: string): Promise<MarketAnalysis> {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    // Inicialización dentro de la función para mayor robustez
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: `Perform a real-time technical analysis for the financial asset ${symbol}. 
@@ -68,7 +69,7 @@ export async function getMarketAnalysis(symbol: string): Promise<MarketAnalysis>
         movingAverage: 'At 50 EMA',
         volatility: 'Moderate'
       },
-      summary: 'Análisis temporalmente no disponible. Verifique su conexión.',
+      summary: 'Análisis temporalmente no disponible. Verifique su conexión y API Key.',
       sources: []
     };
   }
@@ -76,7 +77,7 @@ export async function getMarketAnalysis(symbol: string): Promise<MarketAnalysis>
 
 export async function getMarketNews(query: string = "Forex, Crypto, Gold"): Promise<NewsArticle[]> {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: `Find the 6 most important and recent real news articles about ${query} from today. 
